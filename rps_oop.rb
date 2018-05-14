@@ -240,6 +240,7 @@ end
 class RPSGame
   attr_accessor :human, :computer
   def initialize
+    clear_screen
     @history = History.new
     @human = Human.new
     @computer = Computer.new(@history)
@@ -247,7 +248,7 @@ class RPSGame
   end
 
   def display_welcome_message
-    puts "Welcome to Rock, Paper, Scissors!"
+    puts "Welcome to Rock, Paper, Scissors #{human.name}!"
   end
 
   def display_goodbye_message
