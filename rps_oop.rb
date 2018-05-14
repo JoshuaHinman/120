@@ -21,17 +21,19 @@ class Human < Player
     choice = nil
     loop do
       puts "Choose rock, paper, scissors, lizard or spock  (or r, p, s, l, sp):"
-      choice = gets.chomp
-      Move::VALUES.each do |word|
-        if choice == word[0]
-          choice = word
-        end
-      end
-      choice = 'spock' if choice == 'sp'
+      choice = check_abbreviations(gets.chomp)
       break if Move::VALUES.include? choice
       puts "Sorry, invalid choice."
     end
-    self.move = eval(choice.capitalize).new
+    self.move = Kernel.const_get(choice.capitalize).new
+  end
+
+  def check_abbreviations(choice)
+    Move::VALUES.each do |word|
+      choice = word if choice == word[0]
+    end
+    choice = 'spock' if choice == 'sp'
+    choice
   end
 end
 
@@ -57,7 +59,7 @@ class Computer < Player
     opponent_moves = @history.summary('human').sort_by { |_key, val| val }
     self.move =
       if opponent_moves.empty?
-        eval(@fave.capitalize).new
+        Kernel.const_get(@fave.capitalize).new
       else
         counter_move(opponent_moves[0][0])
       end
@@ -321,8 +323,7 @@ class RPSGame
       break if ['y', 'n'].include? answer
       puts "Please enter y or n."
     end
-    return false if answer == 'n'
-    return true if answer == 'y'
+    answer == 'y'
   end
 
   def play
